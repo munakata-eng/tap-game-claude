@@ -1001,16 +1001,21 @@ body::before {
     right: 0;
     bottom: 0;
     background: rgba(0,0,0,0.8);
-    display: none !important;
+    display: none;
     z-index: 1000;
     overflow-y: auto;
     padding: 20px;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 .help-modal.active {
-    display: flex !important;
+    display: flex;
     align-items: center;
     justify-content: center;
+    visibility: visible;
+    opacity: 1;
 }
 
 .help-content {

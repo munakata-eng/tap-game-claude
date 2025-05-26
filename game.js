@@ -1082,11 +1082,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const helpModal = document.getElementById('helpModal');
     if (helpModal) {
         helpModal.classList.remove('active');
-        helpModal.style.display = 'none';
-        // 少し遅延してから!importantを適用
-        setTimeout(() => {
-            helpModal.style.setProperty('display', 'none', 'important');
-        }, 100);
+        // スタイルをリセット
+        helpModal.style.removeProperty('display');
+        helpModal.style.removeProperty('visibility');
+        helpModal.style.removeProperty('opacity');
     }
 });
 
