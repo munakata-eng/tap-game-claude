@@ -766,11 +766,16 @@ class Game {
         damageDiv.textContent = this.formatNumber(this.petDPS);
         
         const rect = this.canvas.getBoundingClientRect();
-        const screenX = rect.left + centerX + (Math.random() - 0.5) * 100;
-        const screenY = rect.top + centerY + (Math.random() - 0.5) * 100;
+        // キャンバスの中心位置を画面座標に変換
+        const screenX = rect.left + (centerX / this.canvas.width) * rect.width;
+        const screenY = rect.top + (centerY / this.canvas.height) * rect.height;
         
-        damageDiv.style.left = screenX + 'px';
-        damageDiv.style.top = screenY + 'px';
+        // ランダムな位置オフセットを追加（画面内に収まるように調整）
+        const offsetX = (Math.random() - 0.5) * Math.min(rect.width * 0.3, 100);
+        const offsetY = (Math.random() - 0.5) * Math.min(rect.height * 0.3, 100);
+        
+        damageDiv.style.left = (screenX + offsetX) + 'px';
+        damageDiv.style.top = (screenY + offsetY) + 'px';
         document.body.appendChild(damageDiv);
         
         setTimeout(() => {
