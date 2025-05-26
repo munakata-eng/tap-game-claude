@@ -1087,5 +1087,18 @@ document.addEventListener('DOMContentLoaded', function() {
         helpModal.style.removeProperty('visibility');
         helpModal.style.removeProperty('opacity');
     }
+    
+    // モバイルChromeの検出
+    const userAgent = navigator.userAgent || '';
+    const isMobileChrome = /Android.*Chrome|CriOS/i.test(userAgent) && !/Edge/i.test(userAgent);
+    
+    // モバイルChromeの場合はヘルプボタンを非表示にする
+    if (isMobileChrome) {
+        const helpButton = document.getElementById('helpButton');
+        if (helpButton) {
+            helpButton.style.display = 'none';
+            console.log('モバイルChromeを検出したため、ヘルプボタンを非表示にしました');
+        }
+    }
 });
 
