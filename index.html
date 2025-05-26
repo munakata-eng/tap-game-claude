@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>タップヒーロー</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="backgroundCanvas"></canvas>
+    <div class="combo-display" id="comboDisplay"></div>
+    <div class="game-container">
+        <div class="main-area">
+            <div class="stage-info">
+                <h2>ステージ <span id="stage">1</span></h2>
+                <div class="enemy-hp-bar">
+                    <div class="enemy-hp-fill" id="enemyHpBar"></div>
+                    <span class="enemy-hp-text" id="enemyHpText">100 / 100</span>
+                </div>
+            </div>
+            
+            <canvas id="gameCanvas" width="800" height="600"></canvas>
+            
+            <div class="player-stats">
+                <div class="gold-display">
+                    <span class="gold-icon">💰</span>
+                    <div class="stat-info">
+                        <span class="stat-label">ゴールド</span>
+                        <span class="stat-value" id="gold">0</span>
+                    </div>
+                </div>
+                <div class="damage-display">
+                    <span class="damage-icon">⚔️</span>
+                    <div class="stat-info">
+                        <span class="stat-label">攻撃力</span>
+                        <span class="stat-value" id="damage">1</span>
+                    </div>
+                </div>
+                <div class="dps-display">
+                    <span class="dps-icon">⏱️</span>
+                    <div class="stat-info">
+                        <span class="stat-label">DPS</span>
+                        <span class="stat-value" id="dps">0</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="upgrade-panel">
+                <h3>アップグレード</h3>
+                <div class="upgrades-list" id="upgradesList">
+                    <!-- アップグレードはJavaScriptで動的に生成 -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="game.js"></script>
+</body>
+</html>
