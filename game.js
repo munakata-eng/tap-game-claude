@@ -20,7 +20,9 @@ class Game {
             maxHp: 100,
             currentHp: 100,
             goldReward: 10,
-            type: 'slime'
+            type: 'slime',
+            imageNumber: 1,
+            image: null
         };
         
         this.upgrades = [
@@ -118,6 +120,7 @@ class Game {
         this.slashEffects = [];
         
         this.enemyTypes = ['slime', 'demon', 'dragon', 'boss'];
+        this.enemyImages = {};
         
         this.resize();
         window.addEventListener('resize', () => this.resize());
@@ -140,6 +143,9 @@ class Game {
     init() {
         // セーブデータの読み込み
         this.loadGame();
+        
+        // 敵画像のプリロード
+        this.preloadEnemyImages();
         
         // クリックとタッチイベントの両方をサポート
         this.canvas.addEventListener('click', (e) => this.handleClick(e));
@@ -309,6 +315,12 @@ class Game {
             this.enemy.maxHp = Math.floor(100 * Math.pow(1.5, this.stage - 1));
             this.enemy.currentHp = this.enemy.maxHp;
             this.enemy.goldReward = Math.floor(10 * Math.pow(1.3, this.stage - 1));
+            
+            // ランダムな敵画像を選択
+            this.enemy.imageNumber = Math.floor(Math.random() * 41) + 1;
+            if (this.enemyImages[this.enemy.imageNumber]) {
+                this.enemy.image = this.enemyImages[this.enemy.imageNumber];
+            }
         }
     }
     
@@ -516,19 +528,36 @@ class Game {
         this.enemyAnimation += 0.05;
         const breathe = Math.sin(this.enemyAnimation) * 5;
         
-        switch(this.enemy.type) {
-            case 'slime':
-                this.drawSlime(breathe);
-                break;
-            case 'demon':
-                this.drawDemon(breathe);
-                break;
-            case 'dragon':
-                this.drawDragon(breathe);
-                break;
-            case 'boss':
-                this.drawBoss(breathe);
-                break;
+        // 画像が読み込まれている場合は画像を表示
+        if (this.enemy.image && this.enemy.image.complete) {
+            const scale = 1 + breathe * 0.01;
+            const imageSize = 200;
+            this.ctx.save();
+            this.ctx.scale(scale, scale);
+            this.ctx.drawImage(
+                this.enemy.image, 
+                -imageSize / 2, 
+                -imageSize / 2, 
+                imageSize, 
+                imageSize
+            );
+            this.ctx.restore();
+        } else {
+            // 画像がない場合は従来の描画
+            switch(this.enemy.type) {
+                case 'slime':
+                    this.drawSlime(breathe);
+                    break;
+                case 'demon':
+                    this.drawDemon(breathe);
+                    break;
+                case 'dragon':
+                    this.drawDragon(breathe);
+                    break;
+                case 'boss':
+                    this.drawBoss(breathe);
+                    break;
+            }
         }
         
         this.ctx.restore();
@@ -918,6 +947,20 @@ class Game {
             localStorage.removeItem('tapHeroSave');
             location.reload();
         }
+    }
+    
+    preloadEnemyImages() {
+        // 全41体の敵画像をプリロード
+        for (let i = 1; i <= 41; i++) {
+            const img = new Image();
+            const paddedNumber = String(i).padStart(3, '0');
+            img.src = `assets/#${paddedNumber}.png`;
+            this.enemyImages[i] = img;
+        }
+        
+        // 初期の敵画像を設定
+        this.enemy.imageNumber = Math.floor(Math.random() * 41) + 1;
+        this.enemy.image = this.enemyImages[this.enemy.imageNumber];
     }
 }
 
