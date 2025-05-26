@@ -211,8 +211,10 @@ class Game {
         comboDisplay.style.background = `linear-gradient(45deg, 
             hsl(${this.combo * 20}, 100%, 50%), 
             hsl(${this.combo * 20 + 60}, 100%, 50%))`;
-        comboDisplay.style.WebkitBackgroundClip = 'text';
-        comboDisplay.style.WebkitTextFillColor = 'transparent';
+        comboDisplay.style.webkitBackgroundClip = 'text';
+        comboDisplay.style.backgroundClip = 'text';
+        comboDisplay.style.webkitTextFillColor = 'transparent';
+        comboDisplay.style.color = 'transparent';
         
         setTimeout(() => {
             if (this.comboTimer <= 0) {
