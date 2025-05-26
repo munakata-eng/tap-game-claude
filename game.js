@@ -337,7 +337,7 @@ class Game {
             bottom: 0;
             background: radial-gradient(circle at ${screenX}px ${screenY}px, rgba(255,215,0,0.3), transparent 70%);
             pointer-events: none;
-            z-index: 999;
+            z-index: 50;
             animation: goldFlash 0.5s ease-out;
         `;
         document.body.appendChild(flashDiv);
@@ -1049,8 +1049,8 @@ function shareToX() {
     const damage = game.formatNumber(game.clickDamage);
     const dps = game.formatNumber(game.petDPS);
     
-    const text = `忍者タップ道場で任務${stage}まで到達！\n` +
-                `🏯 任務: ${stage}\n` +
+    const text = `忍者タップ道場で修行${stage}段階まで到達！\n` +
+                `🏯 修行: ${stage}段階\n` +
                 `💰 小判: ${gold}\n` +
                 `⚔️ 忍術威力: ${damage}\n` +
                 `🌟 式神術力: ${dps}/秒\n\n` +
@@ -1060,5 +1060,20 @@ function shareToX() {
     const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
     
     window.open(shareUrl, '_blank', 'width=550,height=420');
+}
+
+// ヘルプモーダルの表示/非表示
+function toggleHelp() {
+    const helpModal = document.getElementById('helpModal');
+    helpModal.classList.toggle('active');
+    
+    // モーダルが開いているときは背景をクリックで閉じる
+    if (helpModal.classList.contains('active')) {
+        helpModal.addEventListener('click', function(e) {
+            if (e.target === helpModal) {
+                helpModal.classList.remove('active');
+            }
+        });
+    }
 }
 

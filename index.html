@@ -8,10 +8,48 @@
 </head>
 <body>
     <canvas id="backgroundCanvas"></canvas>
+    <button class="help-button" id="helpButton" onclick="toggleHelp()">?</button>
+    <div class="help-modal" id="helpModal">
+        <div class="help-content">
+            <button class="help-close" onclick="toggleHelp()">×</button>
+            <h2>忍者タップ道場</h2>
+            <p>新米忍者となって先輩忍者たちとの修行を重ね、技を磨いていく成長型ゲームです。</p>
+            
+            <h3>📖 基本ルール</h3>
+            <ol>
+                <li><strong>画面をタップ</strong>して修行相手に技を繰り出します</li>
+                <li>修行を終えると<strong>小判</strong>を獲得できます</li>
+                <li>小判を使って<strong>忍術</strong>や<strong>式神</strong>を習得・強化します</li>
+                <li>より難しい修行に挑戦して、一人前の忍者を目指しましょう！</li>
+            </ol>
+            
+            <h3>⚔️ 修行システム</h3>
+            <ul>
+                <li><strong>忍術威力</strong>: タップで繰り出す技の威力</li>
+                <li><strong>式神術力</strong>: 自動で援護してくれる式神の力</li>
+                <li><strong>連続技</strong>: 素早い連続タップで会心率アップ（最大60%）</li>
+                <li><strong>会心の一撃</strong>: 通常の3倍の威力</li>
+            </ul>
+            
+            <h3>💡 攻略のヒント</h3>
+            <ul>
+                <li>連続タップで会心率を上げよう</li>
+                <li>忍術と式神をバランスよく強化</li>
+                <li>式神は早めに習得すると効率的</li>
+                <li>価格上昇率に注意して効率的に成長</li>
+            </ul>
+            
+            <h3>🎮 操作方法</h3>
+            <ul>
+                <li><strong>PC</strong>: マウスクリック</li>
+                <li><strong>モバイル</strong>: タップ</li>
+            </ul>
+        </div>
+    </div>
     <div class="game-container">
         <div class="main-area">
             <div class="stage-info">
-                <h2>任務 <span id="stage">1</span></h2>
+                <h2>修行 <span id="stage">1</span></h2>
                 <div class="enemy-hp-bar">
                     <div class="enemy-hp-fill" id="enemyHpBar"></div>
                     <span class="enemy-hp-text" id="enemyHpText">100 / 100</span>
