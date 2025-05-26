@@ -986,8 +986,8 @@ class Game {
         for (let i = 1; i <= 41; i++) {
             const img = new Image();
             const paddedNumber = String(i).padStart(3, '0');
-            // #をURLエンコード
-            img.src = `assets/%23${paddedNumber}.png`;
+            // 新しいファイル名（#なし）
+            img.src = `assets/${paddedNumber}.png`;
             
             // 画像読み込み完了時の処理
             img.onload = () => {
