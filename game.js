@@ -320,6 +320,7 @@ class Game {
             this.enemy.imageNumber = Math.floor(Math.random() * 41) + 1;
             if (this.enemyImages[this.enemy.imageNumber]) {
                 this.enemy.image = this.enemyImages[this.enemy.imageNumber];
+                this.debugImageLogged = false; // デバッグフラグをリセット
             }
         }
     }
@@ -528,18 +529,36 @@ class Game {
         this.enemyAnimation += 0.05;
         const breathe = Math.sin(this.enemyAnimation) * 5;
         
+        // デバッグ: 画像の状態を確認（一度だけ）
+        if (!this.debugImageLogged && this.enemy.image) {
+            console.log(`画像状態 - complete: ${this.enemy.image.complete}, naturalWidth: ${this.enemy.image.naturalWidth}, src: ${this.enemy.image.src}`);
+            this.debugImageLogged = true;
+        }
+        
         // 画像が読み込まれている場合は画像を表示
-        if (this.enemy.image && this.enemy.image.complete) {
+        if (this.enemy.image && this.enemy.image.complete && this.enemy.image.naturalWidth > 0) {
             const scale = 1 + breathe * 0.01;
             const imageSize = 200;
             this.ctx.save();
             this.ctx.scale(scale, scale);
+            
+            // 画像のアスペクト比を保持
+            const aspectRatio = this.enemy.image.naturalWidth / this.enemy.image.naturalHeight;
+            let drawWidth = imageSize;
+            let drawHeight = imageSize;
+            
+            if (aspectRatio > 1) {
+                drawHeight = imageSize / aspectRatio;
+            } else {
+                drawWidth = imageSize * aspectRatio;
+            }
+            
             this.ctx.drawImage(
                 this.enemy.image, 
-                -imageSize / 2, 
-                -imageSize / 2, 
-                imageSize, 
-                imageSize
+                -drawWidth / 2, 
+                -drawHeight / 2, 
+                drawWidth, 
+                drawHeight
             );
             this.ctx.restore();
         } else {
@@ -954,13 +973,26 @@ class Game {
         for (let i = 1; i <= 41; i++) {
             const img = new Image();
             const paddedNumber = String(i).padStart(3, '0');
-            img.src = `assets/#${paddedNumber}.png`;
+            // #をURLエンコード
+            img.src = `assets/%23${paddedNumber}.png`;
+            
+            // 画像読み込み完了時の処理
+            img.onload = () => {
+                console.log(`敵画像 #${paddedNumber} を読み込みました`);
+                // 初期の敵画像を設定（最初の画像が読み込まれたとき）
+                if (i === 1 && !this.enemy.image) {
+                    this.enemy.imageNumber = 1;
+                    this.enemy.image = img;
+                }
+            };
+            
+            // エラー時の処理
+            img.onerror = () => {
+                console.error(`敵画像 #${paddedNumber} の読み込みに失敗しました: ${img.src}`);
+            };
+            
             this.enemyImages[i] = img;
         }
-        
-        // 初期の敵画像を設定
-        this.enemy.imageNumber = Math.floor(Math.random() * 41) + 1;
-        this.enemy.image = this.enemyImages[this.enemy.imageNumber];
     }
 }
 
