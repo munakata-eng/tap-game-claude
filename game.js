@@ -190,7 +190,7 @@ class Game {
         }
         this.lastClickTime = now;
         
-        const isCritical = Math.random() < 0.1 + (this.combo * 0.02);
+        const isCritical = Math.random() < 0.1 + Math.min(this.combo * 0.01, 0.2);
         const damage = isCritical ? this.clickDamage * 3 : this.clickDamage;
         
         this.dealDamage(damage);
