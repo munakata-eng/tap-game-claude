@@ -326,10 +326,10 @@ class Game {
             upgradesList.appendChild(div);
         });
         
-        // ペットアップグレード
+        // 召喚獣アップグレード
         const petHeader = document.createElement('div');
         petHeader.className = 'upgrade-category';
-        petHeader.innerHTML = '<h4>🐾 ペット</h4>';
+        petHeader.innerHTML = '<h4>🌟 召喚獣</h4>';
         upgradesList.appendChild(petHeader);
         
         this.pets.forEach(pet => {

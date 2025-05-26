@@ -420,11 +420,12 @@ body::before {
 }
 
 .damage-number {
-    position: absolute;
+    position: fixed;
     font-size: 32px;
     font-weight: 900;
     background: linear-gradient(45deg, #ffff00, #ff00ff, #00ffff);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     text-shadow: 
         0 0 10px rgba(255,255,0,0.8),
@@ -432,6 +433,7 @@ body::before {
     pointer-events: none;
     animation: floatUp 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     letter-spacing: 2px;
+    z-index: 1000;
 }
 
 .damage-number.crit {
@@ -531,6 +533,7 @@ body::before {
 .damage-number.pet-damage {
     background: linear-gradient(45deg, #00ffff, #00ff88, #00ffff);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     text-shadow: 
         0 0 10px rgba(0,255,255,0.8),
