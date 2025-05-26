@@ -1010,3 +1010,24 @@ class Game {
 }
 
 const game = new Game();
+
+// Xでシェアする機能
+function shareToX() {
+    const stage = game.stage;
+    const gold = game.formatNumber(game.gold);
+    const damage = game.formatNumber(game.clickDamage);
+    const dps = game.formatNumber(game.petDPS);
+    
+    const text = `忍者タップ道場で任務${stage}まで到達！\n` +
+                `🏯 任務: ${stage}\n` +
+                `💰 小判: ${gold}\n` +
+                `⚔️ 忍術威力: ${damage}\n` +
+                `🌟 式神術力: ${dps}/秒\n\n` +
+                `#忍者タップ道場`;
+    
+    const url = window.location.href;
+    const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+    
+    window.open(shareUrl, '_blank', 'width=550,height=420');
+}
+
