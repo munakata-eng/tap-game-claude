@@ -288,8 +288,14 @@ class Game {
     }
     
     renderUpgrades() {
-        const upgradesList = document.getElementById('upgradesList');
-        upgradesList.innerHTML = '';
+        // デスクトップとモバイル両方のリストを取得
+        const upgradesListDesktop = document.getElementById('upgradesListDesktop');
+        const upgradesListMobile = document.getElementById('upgradesListMobile');
+        
+        // 両方のリストに同じ内容を表示
+        [upgradesListDesktop, upgradesListMobile].forEach(upgradesList => {
+            if (!upgradesList) return;
+            upgradesList.innerHTML = '';
         
         // 武器アップグレード
         const weaponHeader = document.createElement('div');
@@ -347,6 +353,7 @@ class Game {
                 this.buyPet(pet);
             });
             upgradesList.appendChild(div);
+        });
         });
     }
     

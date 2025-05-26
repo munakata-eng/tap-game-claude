@@ -246,10 +246,29 @@ body::before {
 }
 
 .upgrade-panel {
-    width: 100%;
-    max-width: 800px;
     background: linear-gradient(135deg, rgba(20,20,40,0.9), rgba(10,10,20,0.9));
     padding: 30px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* デスクトップ用のアップグレードパネル */
+.desktop-only {
+    display: block;
+    width: 350px;
+    border-left: 3px solid rgba(255,0,255,0.3);
+    box-shadow: 
+        -10px 0 30px rgba(0,0,0,0.5),
+        inset 2px 0 10px rgba(255,0,255,0.2);
+    height: 100vh;
+    overflow-y: auto;
+}
+
+/* モバイル用のアップグレードパネル */
+.mobile-only {
+    display: none;
+    width: 100%;
+    max-width: 800px;
     margin-top: 30px;
     border-radius: 20px;
     border: 2px solid rgba(255,0,255,0.3);
@@ -451,7 +470,7 @@ body::before {
 
 .combo-display {
     position: fixed;
-    top: 140px;
+    top: 160px;
     left: 50%;
     transform: translateX(-50%);
     font-size: 2em;
@@ -520,6 +539,14 @@ body::before {
 
 /* レスポンシブデザイン */
 @media (max-width: 1024px) {
+    .desktop-only {
+        display: none !important;
+    }
+    
+    .mobile-only {
+        display: block !important;
+    }
+    
     .game-container {
         flex-direction: column;
     }
@@ -529,7 +556,7 @@ body::before {
         padding: 10px;
     }
     
-    .upgrade-panel {
+    .upgrade-panel.mobile-only {
         order: 1;
         width: 100%;
         height: 200px;
@@ -575,7 +602,7 @@ body::before {
         height: auto;
     }
     
-    .upgrade-panel {
+    .upgrade-panel.mobile-only {
         position: relative;
         width: 100%;
         height: auto;
@@ -643,7 +670,7 @@ body::before {
     
     .combo-display {
         font-size: 1.5em;
-        top: 120px;
+        top: 140px;
     }
 }
 
