@@ -28,55 +28,55 @@ class Game {
         this.upgrades = [
             {
                 id: 'sword',
-                name: '⚔️ 勇者ノ剣',
+                name: '🗡️ 手裏剣',
                 baseCost: 10,
                 costMultiplier: 1.15,
                 level: 0,
                 effect: 1,
-                description: 'タップダメージ +1'
+                description: '忍術威力 +1'
             },
             {
                 id: 'hero',
-                name: '🛡️ 英雄ノ加護',
+                name: '⚔️ 忍刀',
                 baseCost: 100,
                 costMultiplier: 1.3,
                 level: 0,
                 effect: 5,
-                description: 'タップダメージ +5'
+                description: '忍術威力 +5'
             },
             {
                 id: 'magic',
-                name: '✨ 魔法ノ力',
+                name: '🌸 桜吹雪ノ術',
                 baseCost: 1000,
                 costMultiplier: 1.5,
                 level: 0,
                 effect: 25,
-                description: 'タップダメージ +25'
+                description: '忍術威力 +25'
             },
             {
                 id: 'legendary',
-                name: '🔥 伝説ノ武器',
+                name: '🔥 火遁ノ術',
                 baseCost: 10000,
                 costMultiplier: 1.8,
                 level: 0,
                 effect: 100,
-                description: 'タップダメージ +100'
+                description: '忍術威力 +100'
             },
             {
                 id: 'divine',
-                name: '⭐ 神ノ祝福',
+                name: '⛩️ 秘伝ノ巻物',
                 baseCost: 100000,
                 costMultiplier: 2.0,
                 level: 0,
                 effect: 500,
-                description: 'タップダメージ +500'
+                description: '忍術威力 +500'
             }
         ];
         
         this.pets = [
             {
-                id: 'fairy',
-                name: '🧚 妖精',
+                id: 'kitsune',
+                name: '🦊 狐火',
                 baseCost: 50,
                 costMultiplier: 1.4,
                 level: 0,
@@ -84,8 +84,8 @@ class Game {
                 description: '毎秒 0.5 ダメージ'
             },
             {
-                id: 'dragon',
-                name: '🐉 ドラゴン',
+                id: 'tengu',
+                name: '👺 天狗',
                 baseCost: 500,
                 costMultiplier: 1.5,
                 level: 0,
@@ -93,8 +93,8 @@ class Game {
                 description: '毎秒 5 ダメージ'
             },
             {
-                id: 'phoenix',
-                name: '🔥 フェニックス',
+                id: 'oni',
+                name: '👹 鬼神',
                 baseCost: 5000,
                 costMultiplier: 1.6,
                 level: 0,
@@ -102,8 +102,8 @@ class Game {
                 description: '毎秒 50 ダメージ'
             },
             {
-                id: 'guardian',
-                name: '👼 守護天使',
+                id: 'ryujin',
+                name: '🐲 龍神',
                 baseCost: 50000,
                 costMultiplier: 1.8,
                 level: 0,
