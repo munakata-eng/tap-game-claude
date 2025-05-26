@@ -225,8 +225,10 @@ class Game {
         this.enemy.currentHp -= damage;
         
         if (this.enemy.currentHp <= 0) {
-            this.gold += this.enemy.goldReward * (1 + this.combo * 0.1);
+            const goldEarned = Math.floor(this.enemy.goldReward * (1 + this.combo * 0.1));
+            this.gold += goldEarned;
             this.createDeathEffect();
+            this.createGoldEffect(goldEarned);
             this.nextEnemy();
         }
         
@@ -250,6 +252,51 @@ class Game {
                 color: `hsl(${Math.random() * 60 + 300}, 100%, 50%)`
             });
         }
+    }
+    
+    createGoldEffect(goldAmount) {
+        const centerX = this.canvas.width / 2;
+        const centerY = this.canvas.height / 2;
+        
+        // ゴールド獲得表示
+        const goldDiv = document.createElement('div');
+        goldDiv.className = 'gold-popup';
+        goldDiv.innerHTML = `<span class="gold-plus">+</span><span class="gold-amount">${this.formatNumber(goldAmount)}</span><span class="gold-coin">💰</span>`;
+        
+        const rect = this.canvas.getBoundingClientRect();
+        const screenX = rect.left + (centerX / this.canvas.width) * rect.width;
+        const screenY = rect.top + (centerY / this.canvas.height) * rect.height;
+        
+        goldDiv.style.left = screenX + 'px';
+        goldDiv.style.top = screenY + 'px';
+        document.body.appendChild(goldDiv);
+        
+        // ゴールドコインのパーティクル
+        for (let i = 0; i < 10; i++) {
+            setTimeout(() => {
+                const coinDiv = document.createElement('div');
+                coinDiv.className = 'gold-particle';
+                coinDiv.textContent = '💰';
+                
+                const angle = (Math.PI * 2 * i) / 10;
+                const distance = 50 + Math.random() * 50;
+                const x = screenX + Math.cos(angle) * distance;
+                const y = screenY + Math.sin(angle) * distance;
+                
+                coinDiv.style.left = screenX + 'px';
+                coinDiv.style.top = screenY + 'px';
+                coinDiv.style.setProperty('--end-x', `${x - screenX}px`);
+                coinDiv.style.setProperty('--end-y', `${y - screenY}px`);
+                
+                document.body.appendChild(coinDiv);
+                
+                setTimeout(() => coinDiv.remove(), 1000);
+            }, i * 50);
+        }
+        
+        setTimeout(() => {
+            goldDiv.remove();
+        }, 2000);
     }
     
     nextEnemy() {

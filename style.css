@@ -541,6 +541,77 @@ body::before {
         0 0 20px rgba(0,255,136,0.6);
 }
 
+.gold-popup {
+    position: fixed;
+    font-size: 36px;
+    font-weight: 900;
+    color: #ffd700;
+    text-shadow: 
+        0 0 10px rgba(255,215,0,0.8),
+        0 0 20px rgba(255,215,0,0.6),
+        2px 2px 4px rgba(0,0,0,0.8);
+    pointer-events: none;
+    animation: goldPopup 2s ease-out forwards;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transform: translate(-50%, -50%);
+}
+
+.gold-plus {
+    color: #00ff00;
+    font-size: 0.8em;
+}
+
+.gold-amount {
+    color: #ffd700;
+}
+
+.gold-coin {
+    font-size: 0.9em;
+    filter: drop-shadow(0 0 10px rgba(255,215,0,0.8));
+}
+
+@keyframes goldPopup {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.5);
+    }
+    20% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.2);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -150px) scale(0.8);
+    }
+}
+
+.gold-particle {
+    position: fixed;
+    font-size: 24px;
+    pointer-events: none;
+    animation: goldParticle 1s ease-out forwards;
+    z-index: 999;
+    filter: drop-shadow(0 0 5px rgba(255,215,0,0.8));
+}
+
+@keyframes goldParticle {
+    0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(0);
+    }
+    50% {
+        opacity: 1;
+        transform: translate(var(--end-x), var(--end-y)) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(var(--end-x), calc(var(--end-y) + 30px)) scale(0.5);
+    }
+}
+
 /* レスポンシブデザイン */
 @media (max-width: 1024px) {
     .desktop-only {
