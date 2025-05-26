@@ -17,9 +17,9 @@ class Game {
         this.lastClickTime = 0;
         
         this.enemy = {
-            maxHp: 100,
-            currentHp: 100,
-            goldReward: 10,
+            maxHp: 50,
+            currentHp: 50,
+            goldReward: 15,
             type: 'slime',
             imageNumber: 1,
             image: null
@@ -157,7 +157,11 @@ class Game {
         
         this.renderUpgrades();
         
-        for (let i = 0; i < 50; i++) {
+        // モバイルデバイスでは背景パーティクル数を減らす
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        const particleCount = isMobile ? 15 : 30;
+        
+        for (let i = 0; i < particleCount; i++) {
             this.backgroundParticles.push({
                 x: Math.random() * window.innerWidth,
                 y: Math.random() * window.innerHeight,
@@ -196,7 +200,7 @@ class Game {
         }
         this.lastClickTime = now;
         
-        const isCritical = Math.random() < 0.1 + Math.min(this.combo * 0.01, 0.2);
+        const isCritical = Math.random() < 0.1 + Math.min(this.combo * 0.02, 0.5);
         const damage = isCritical ? this.clickDamage * 3 : this.clickDamage;
         
         this.dealDamage(damage);
@@ -233,7 +237,7 @@ class Game {
         this.enemy.currentHp -= damage;
         
         if (this.enemy.currentHp <= 0) {
-            const goldEarned = Math.floor(this.enemy.goldReward * (1 + this.combo * 0.1));
+            const goldEarned = this.enemy.goldReward;
             this.gold += goldEarned;
             this.createDeathEffect();
             this.createGoldEffect(goldEarned);
@@ -312,9 +316,9 @@ class Game {
             this.stage++;
             const stageIndex = Math.min(Math.floor(this.stage / 10), this.enemyTypes.length - 1);
             this.enemy.type = this.enemyTypes[stageIndex];
-            this.enemy.maxHp = Math.floor(100 * Math.pow(1.5, this.stage - 1));
+            this.enemy.maxHp = Math.floor(50 * Math.pow(1.25, this.stage - 1));
             this.enemy.currentHp = this.enemy.maxHp;
-            this.enemy.goldReward = Math.floor(10 * Math.pow(1.3, this.stage - 1));
+            this.enemy.goldReward = Math.floor(15 * Math.pow(1.4, this.stage - 1));
             
             // ランダムな敵画像を選択
             this.enemy.imageNumber = Math.floor(Math.random() * 41) + 1;
@@ -388,10 +392,10 @@ class Game {
             upgradesList.appendChild(div);
         });
         
-        // 召喚獣アップグレード
+        // 式神アップグレード
         const petHeader = document.createElement('div');
         petHeader.className = 'upgrade-category';
-        petHeader.innerHTML = '<h4>🌟 召喚獣</h4>';
+        petHeader.innerHTML = '<h4>🌟 式神</h4>';
         upgradesList.appendChild(petHeader);
         
         this.pets.forEach(pet => {
@@ -457,15 +461,18 @@ class Game {
         
         for (let i = 0; i < 20; i++) {
             const angle = (Math.PI * 2 * i) / 20;
-            this.particles.push({
-                x: centerX + Math.cos(angle) * 100,
-                y: centerY + Math.sin(angle) * 100,
-                vx: -Math.cos(angle) * 3,
-                vy: -Math.sin(angle) * 3,
-                life: 1,
-                size: 8,
-                color: `hsl(${Math.random() * 60 + 40}, 100%, 50%)`
-            });
+            // パーティクル数を制限
+            if (this.particles.length < 100) {
+                this.particles.push({
+                    x: centerX + Math.cos(angle) * 100,
+                    y: centerY + Math.sin(angle) * 100,
+                    vx: -Math.cos(angle) * 3,
+                    vy: -Math.sin(angle) * 3,
+                    life: 1,
+                    size: 8,
+                    color: `hsl(${Math.random() * 60 + 40}, 100%, 50%)`
+                });
+            }
         }
     }
     
@@ -538,7 +545,7 @@ class Game {
         // 画像が読み込まれている場合は画像を表示
         if (this.enemy.image && this.enemy.image.complete && this.enemy.image.naturalWidth > 0) {
             const scale = 1 + breathe * 0.01;
-            const imageSize = 200;
+            const imageSize = 640;
             this.ctx.save();
             this.ctx.scale(scale, scale);
             
@@ -727,7 +734,7 @@ class Game {
     }
     
     updateBackgroundParticles() {
-        this.bgCtx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        this.bgCtx.fillStyle = 'rgba(26, 20, 24, 0.1)';
         this.bgCtx.fillRect(0, 0, this.backgroundCanvas.width, this.backgroundCanvas.height);
         
         this.backgroundParticles.forEach(particle => {
@@ -739,11 +746,12 @@ class Game {
             
             this.bgCtx.save();
             this.bgCtx.globalAlpha = particle.opacity;
-            this.bgCtx.fillStyle = `hsl(${Date.now() * 0.01 % 360}, 100%, 50%)`;
-            this.bgCtx.shadowBlur = 10;
-            this.bgCtx.shadowColor = this.bgCtx.fillStyle;
+            // 桜の花びらのような淡いピンク色
+            const hue = 350 + Math.sin(Date.now() * 0.0001) * 10;
+            this.bgCtx.fillStyle = `hsl(${hue}, 70%, 80%)`;
+            // シンプルな円形に変更（パフォーマンス向上）
             this.bgCtx.beginPath();
-            this.bgCtx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+            this.bgCtx.arc(particle.x, particle.y, particle.size * 2, 0, Math.PI * 2);
             this.bgCtx.fill();
             this.bgCtx.restore();
         });
@@ -761,8 +769,7 @@ class Game {
                 this.ctx.save();
                 this.ctx.globalAlpha = particle.life;
                 this.ctx.fillStyle = particle.color;
-                this.ctx.shadowBlur = 10;
-                this.ctx.shadowColor = particle.color;
+                // shadowBlurを削除（パフォーマンス向上）
                 this.ctx.beginPath();
                 this.ctx.arc(particle.x, particle.y, particle.size * particle.life, 0, Math.PI * 2);
                 this.ctx.fill();
@@ -805,7 +812,13 @@ class Game {
     gameLoop() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         
-        this.updateBackgroundParticles();
+        // フレームスキップを実装（モバイルでは2フレームに1回背景更新）
+        this.frameCount = (this.frameCount || 0) + 1;
+        const isMobile = window.innerWidth <= 768;
+        
+        if (!isMobile || this.frameCount % 2 === 0) {
+            this.updateBackgroundParticles();
+        }
         
         // ペットの自動攻撃
         this.updatePetAttacks();
