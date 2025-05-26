@@ -162,6 +162,7 @@ body::before {
         0 0 50px rgba(139,0,0,0.3),
         inset 0 0 50px rgba(220,50,50,0.1);
     position: relative;
+    touch-action: none;
 }
 
 #gameCanvas::before {
@@ -281,10 +282,12 @@ body::before {
 .upgrades-list {
     flex: 1;
     overflow-y: auto;
+    overflow-x: hidden;
     margin-bottom: 10px;
     display: flex;
     flex-direction: column;
     gap: 10px;
+    padding: 0 10px;
 }
 
 .upgrades-list::-webkit-scrollbar {
@@ -335,12 +338,15 @@ body::before {
     background: linear-gradient(135deg, rgba(40,40,80,0.4), rgba(20,20,40,0.4));
     border: 2px solid transparent;
     border-radius: 15px;
-    padding: 20px;
-    margin-bottom: 15px;
+    padding: 15px;
+    margin-bottom: 10px;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 .upgrade-item::before {
@@ -360,7 +366,7 @@ body::before {
 
 .upgrade-item:hover {
     background: linear-gradient(135deg, rgba(120,60,60,0.6), rgba(60,30,30,0.6));
-    transform: translateX(-5px) scale(1.02);
+    transform: scale(1.01);
     border-color: rgba(220,50,50,0.5);
     box-shadow: 
         0 5px 20px rgba(220,50,50,0.3),
@@ -544,19 +550,20 @@ body::before {
 
 .gold-popup {
     position: fixed;
-    font-size: 36px;
+    font-size: 48px;
     font-weight: 900;
     color: #ffd700;
     text-shadow: 
-        0 0 10px rgba(255,215,0,0.8),
-        0 0 20px rgba(255,215,0,0.6),
-        2px 2px 4px rgba(0,0,0,0.8);
+        0 0 20px rgba(255,215,0,1),
+        0 0 40px rgba(255,215,0,0.8),
+        0 0 60px rgba(255,215,0,0.6),
+        3px 3px 6px rgba(0,0,0,1);
     pointer-events: none;
-    animation: goldPopup 2s ease-out forwards;
+    animation: goldPopup 2.5s ease-out forwards;
     z-index: 1000;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
     transform: translate(-50%, -50%);
 }
 
@@ -577,39 +584,55 @@ body::before {
 @keyframes goldPopup {
     0% {
         opacity: 0;
-        transform: translate(-50%, -50%) scale(0.5);
+        transform: translate(-50%, -50%) scale(0.3) rotate(-15deg);
     }
-    20% {
+    15% {
         opacity: 1;
-        transform: translate(-50%, -50%) scale(1.2);
+        transform: translate(-50%, -50%) scale(1.5) rotate(5deg);
+    }
+    30% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.3) rotate(-5deg);
     }
     100% {
         opacity: 0;
-        transform: translate(-50%, -150px) scale(0.8);
+        transform: translate(-50%, -200px) scale(1) rotate(0deg);
     }
 }
 
 .gold-particle {
     position: fixed;
-    font-size: 24px;
+    font-size: 36px;
     pointer-events: none;
-    animation: goldParticle 1s ease-out forwards;
+    animation: goldParticle 1.5s ease-out forwards;
     z-index: 999;
-    filter: drop-shadow(0 0 5px rgba(255,215,0,0.8));
+    filter: drop-shadow(0 0 15px rgba(255,215,0,1));
 }
 
 @keyframes goldParticle {
     0% {
         opacity: 1;
-        transform: translate(0, 0) scale(0);
+        transform: translate(0, 0) scale(0) rotate(0deg);
     }
     50% {
         opacity: 1;
-        transform: translate(var(--end-x), var(--end-y)) scale(1);
+        transform: translate(var(--end-x), var(--end-y)) scale(1.5) rotate(360deg);
     }
     100% {
         opacity: 0;
-        transform: translate(var(--end-x), calc(var(--end-y) + 30px)) scale(0.5);
+        transform: translate(var(--end-x), calc(var(--end-y) + 50px)) scale(0.8) rotate(720deg);
+    }
+}
+
+@keyframes goldFlash {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
     }
 }
 
@@ -911,7 +934,7 @@ body::before {
     }
     
     .upgrade-item:active {
-        transform: scale(0.95);
+        transform: scale(0.98);
         transition: transform 0.1s ease;
     }
     
@@ -927,6 +950,16 @@ body::before {
     
     #gameCanvas {
         cursor: default;
+    }
+    
+    /* モバイルでのスクロールを優先 */
+    .upgrades-list {
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-y;
+    }
+    
+    .upgrade-item {
+        touch-action: manipulation;
     }
 }
 

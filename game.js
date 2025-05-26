@@ -149,11 +149,35 @@ class Game {
         
         // クリックとタッチイベントの両方をサポート
         this.canvas.addEventListener('click', (e) => this.handleClick(e));
+        
+        // タッチイベントの改善版
+        let touchStartTime;
+        let touchStartX, touchStartY;
+        let hasMoved = false;
+        
         this.canvas.addEventListener('touchstart', (e) => {
-            e.preventDefault();
+            touchStartTime = Date.now();
             const touch = e.touches[0];
-            this.handleClick(touch);
-        });
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+            hasMoved = false;
+        }, { passive: true });
+        
+        this.canvas.addEventListener('touchmove', (e) => {
+            const touch = e.touches[0];
+            const moveX = Math.abs(touch.clientX - touchStartX);
+            const moveY = Math.abs(touch.clientY - touchStartY);
+            if (moveX > 10 || moveY > 10) {
+                hasMoved = true;
+            }
+        }, { passive: true });
+        
+        this.canvas.addEventListener('touchend', (e) => {
+            if (!hasMoved && Date.now() - touchStartTime < 300) {
+                const touch = e.changedTouches[0];
+                this.handleClick(touch);
+            }
+        }, { passive: true });
         
         this.renderUpgrades();
         
@@ -209,9 +233,7 @@ class Game {
         this.createSlashEffect(x, y);
         this.enemyShake = 15;
         
-        if (this.combo > 1) {
-            this.updateComboDisplay();
-        }
+        // コンボ表示は削除（内部的にはコンボ機能は維持）
     }
     
     updateComboDisplay() {
@@ -270,45 +292,63 @@ class Game {
         const centerX = this.canvas.width / 2;
         const centerY = this.canvas.height / 2;
         
-        // ゴールド獲得表示
+        // ゴールド獲得表示（画面上部に表示）
         const goldDiv = document.createElement('div');
         goldDiv.className = 'gold-popup';
         goldDiv.innerHTML = `<span class="gold-plus">+</span><span class="gold-amount">${this.formatNumber(goldAmount)}</span><span class="gold-coin">💰</span>`;
         
         const rect = this.canvas.getBoundingClientRect();
         const screenX = rect.left + (centerX / this.canvas.width) * rect.width;
-        const screenY = rect.top + (centerY / this.canvas.height) * rect.height;
+        const screenY = rect.top + 100; // 画面上部に固定
         
         goldDiv.style.left = screenX + 'px';
         goldDiv.style.top = screenY + 'px';
         document.body.appendChild(goldDiv);
         
-        // ゴールドコインのパーティクル
-        for (let i = 0; i < 10; i++) {
-            setTimeout(() => {
-                const coinDiv = document.createElement('div');
-                coinDiv.className = 'gold-particle';
-                coinDiv.textContent = '💰';
-                
-                const angle = (Math.PI * 2 * i) / 10;
-                const distance = 50 + Math.random() * 50;
-                const x = screenX + Math.cos(angle) * distance;
-                const y = screenY + Math.sin(angle) * distance;
-                
-                coinDiv.style.left = screenX + 'px';
-                coinDiv.style.top = screenY + 'px';
-                coinDiv.style.setProperty('--end-x', `${x - screenX}px`);
-                coinDiv.style.setProperty('--end-y', `${y - screenY}px`);
-                
-                document.body.appendChild(coinDiv);
-                
-                setTimeout(() => coinDiv.remove(), 1000);
-            }, i * 50);
+        // 画面端に向かう大きなゴールドエフェクト
+        for (let i = 0; i < 8; i++) {
+            const coinDiv = document.createElement('div');
+            coinDiv.className = 'gold-particle';
+            coinDiv.textContent = '💰';
+            coinDiv.style.fontSize = '36px';
+            
+            const angle = (Math.PI * 2 * i) / 8;
+            const distance = 150 + Math.random() * 100;
+            const x = screenX + Math.cos(angle) * distance;
+            const y = screenY + Math.sin(angle) * distance;
+            
+            coinDiv.style.left = screenX + 'px';
+            coinDiv.style.top = screenY + 'px';
+            coinDiv.style.setProperty('--end-x', `${x - screenX}px`);
+            coinDiv.style.setProperty('--end-y', `${y - screenY}px`);
+            
+            document.body.appendChild(coinDiv);
+            
+            setTimeout(() => coinDiv.remove(), 1500);
         }
+        
+        // 画面全体に黄金の輝きエフェクト
+        const flashDiv = document.createElement('div');
+        flashDiv.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at ${screenX}px ${screenY}px, rgba(255,215,0,0.3), transparent 70%);
+            pointer-events: none;
+            z-index: 999;
+            animation: goldFlash 0.5s ease-out;
+        `;
+        document.body.appendChild(flashDiv);
+        
+        setTimeout(() => {
+            flashDiv.remove();
+        }, 500);
         
         setTimeout(() => {
             goldDiv.remove();
-        }, 2000);
+        }, 2500);
     }
     
     nextEnemy() {
@@ -385,10 +425,6 @@ class Game {
             `;
             
             div.addEventListener('click', () => this.buyUpgrade(upgrade));
-            div.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                this.buyUpgrade(upgrade);
-            });
             upgradesList.appendChild(div);
         });
         
@@ -414,10 +450,6 @@ class Game {
             `;
             
             div.addEventListener('click', () => this.buyPet(pet));
-            div.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                this.buyPet(pet);
-            });
             upgradesList.appendChild(div);
         });
         });
@@ -827,7 +859,6 @@ class Game {
             this.comboTimer--;
             if (this.comboTimer === 0) {
                 this.combo = 0;
-                document.getElementById('comboDisplay').classList.remove('active');
             }
         }
         
